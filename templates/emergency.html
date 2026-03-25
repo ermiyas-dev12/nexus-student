@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Emergency Contacts{% endblock %}
+
+{% block content %}
+<div class="emergency-page">
+
+  <div class="section-title">Emergency & Help Contacts</div>
+  <div class="section-sub">
+    Quick access to the support you need, when you need it most
+  </div>
+
+  <div class="emergency-banner">
+    <div class="icon">🚨</div>
+    <div>
+      <strong>In a life-threatening emergency, always call 112 or 103 first.</strong><br>
+      Police: 102 · Fire: 101 · Ambulance: 103
+    </div>
+  </div>
+
+  <div class="contacts-grid">
+
+    <div class="contact-card" style="--card-color:#ef4444;">
+      <div class="contact-icon">🚑</div>
+      <h3>Emergency Services</h3>
+      <p>Police, fire, ambulance — life-threatening situations only</p>
+      <div class="contact-number">112</div>
+      <div class="contact-hours">📞 Available 24/7</div>
+    </div>
+
+    <div class="contact-card" style="--card-color:#00d4ff;">
+      <div class="contact-icon">🏥</div>
+      <h3>Medical Emergency</h3>
+      <p>Immediate medical assistance and ambulance services</p>
+      <div class="contact-number">103</div>
+      <div class="contact-hours">📞 Available 24/7</div>
+    </div>
+
+    <div class="contact-card" style="--card-color:#a78bfa;">
+      <div class="contact-icon">🎓</div>
+      <h3>International Student Office</h3>
+      <p>Visa issues, academic problems, welfare support</p>
+      <div class="contact-number">Ask your university</div>
+      <div class="contact-hours">🕐 Mon–Fri, 9am–5pm</div>
+    </div>
+
+    <div class="contact-card" style="--card-color:#10b981;">
+      <div class="contact-icon">⚖️</div>
+      <h3>Migration Support</h3>
+      <p>Visa, registration, and migration-related assistance</p>
+      <div class="contact-number">Ministry of Internal Affairs (MVD)</div>
+      <div class="contact-hours">📞 Official offices, working hours vary</div>
+    </div>
+
+    <div class="contact-card" style="--card-color:#f59e0b;">
+      <div class="contact-icon">🧠</div>
+      <h3>Mental Health Support</h3>
+      <p>Psychological help and crisis support services</p>
+      <div class="contact-number">8-800-2000-122</div>
+      <div class="contact-hours">📞 Available 24/7, free</div>
+    </div>
+
+    <div class="contact-card" style="--card-color:#00d4ff;">
+      <div class="contact-icon">🏠</div>
+      <h3>Housing Assistance</h3>
+      <p>Support through university housing or local services</p>
+      <div class="contact-number">Contact your landlord or university</div>
+      <div class="contact-hours">📞 Depends on provider</div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

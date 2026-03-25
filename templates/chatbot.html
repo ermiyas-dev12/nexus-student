@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}AI Assistant{% endblock %}
+
+{% block content %}
+<div class="chatbot-layout">
+
+  <!-- SIDEBAR -->
+  <div class="chat-sidebar">
+    <h3>Quick Questions</h3>
+    <button class="suggestion-btn" onclick="sendSuggestion('Can I work while studying in Russia?')">
+        Can I work while studying?
+    </button>
+    <button class="suggestion-btn" onclick="sendSuggestion('What documents do I need to extend my student visa in Russia?')">
+        What documents do I need for visa extension?
+    </button>
+    <button class="suggestion-btn" onclick="sendSuggestion('How do I access medical services in Russia?')">
+        How do I access healthcare?
+    </button>
+    <button class="suggestion-btn" onclick="sendSuggestion('What are the rules for renting accommodation in Russia?')">
+        Housing rules in Russia?
+    </button>
+    <button class="suggestion-btn" onclick="sendSuggestion('Do I need a work permit as a student in Russia?')">
+      💳 Do I need a work permit?
+    </button>
+    <button class="suggestion-btn" onclick="sendSuggestion('Can I stay in Russia after graduation?')">
+      🎓 Can I stay after graduation?
+    </button>
+  </div>
+
+  <!-- CHAT AREA -->
+  <div class="chat-main">
+    <div class="chat-header">
+      <div class="bot-avatar">🤖</div>
+      <div class="bot-info">
+        <h3>NexusBot</h3>
+        <p>Online — ready to help</p>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        <div class="msg-avatar bot">N</div>
+        <div class="msg-bubble">
+          👋 Hi! I'm NexusBot, your international student assistant.<br><br>
+          I can help with <strong>visa questions</strong>,
+          <strong>housing tips</strong>, <strong>work permits</strong>,
+          <strong>health insurance</strong>, and much more.<br><br>
+          What's on your mind today?
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <textarea class="chat-input" id="chatInput"
+        placeholder="Ask me anything about student life in Russia..."
+        rows="1" onkeydown="handleKey(event)"></textarea>
+      <button class="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function getBotResponse(msg) {
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    })
+    .then(res => res.json())
+    .then(data => {
+      removeTyping();
+      addMessage(data.reply, 'bot');
+    });
+  }
+
+  function addMessage(text, type) {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = `message ${type}`;
+    const initial = type === 'bot' ? 'N' : 'You';
+    div.innerHTML = `
+      <div class="msg-avatar ${type}">${initial}</div>
+      <div class="msg-bubble">${text}</div>
+    `;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function showTyping() {
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'message bot';
+    div.id = 'typing-indicator';
+    div.innerHTML = `
+      <div class="msg-avatar bot">N</div>
+      <div class="msg-bubble">
+        <div class="typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function removeTyping() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+  }
+
+  function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    addMessage(text, 'user');
+    input.value = '';
+    showTyping();
+    getBotResponse(text);
+  }
+
+  function sendSuggestion(text) {
+    document.getElementById('chatInput').value = text;
+    sendMessage();
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<div class="hero">
+  <div class="hero-badge">🌍 Built for International Students</div>
+  <h1>Your guide to thriving<br>in a <em>new country</em></h1>
+  <p>Navigate visas, housing, university life, and work permits — 
+     all in one place. Backed by AI and a real student community.</p>
+  <div class="hero-buttons">
+    <a href="{{ url_for('chatbot') }}" class="btn-primary">
+      Ask the AI Assistant →
+    </a>
+    <a href="{{ url_for('resources') }}" class="btn-ghost">
+      Browse Resources
+    </a>
+  </div>
+</div>
+
+<!-- QUICK HELP CARDS -->
+<div class="quick-help">
+  <div class="section-title">What do you need help with?</div>
+  <div class="section-sub">
+    Jump straight to what matters most to you right now
+  </div>
+
+  <div class="cards-grid">
+
+    <a href="{{ url_for('chatbot') }}" class="help-card"
+       style="--card-accent:#00d4ff; --card-glow:rgba(0,212,255,0.05);">
+      <div class="card-icon">📋</div>
+      <h3>Visa & Immigration</h3>
+      <p>Extension deadlines, documentation requirements, 
+         and step-by-step guidance for your visa type.</p>
+    </a>
+
+    <a href="{{ url_for('resources') }}" class="help-card"
+       style="--card-accent:#a78bfa; --card-glow:rgba(124,58,237,0.05);">
+      <div class="card-icon">🏠</div>
+      <h3>Housing & Accommodation</h3>
+      <p>Finding safe rentals, understanding rental agreements,
+         and avoiding common scams.</p>
+    </a>
+
+    <a href="{{ url_for('resources') }}" class="help-card"
+       style="--card-accent:#f59e0b; --card-glow:rgba(245,158,11,0.05);">
+      <div class="card-icon">💼</div>
+      <h3>Work Permits</h3>
+      <p>Legal work conditions, permits, and how to continue working
+         after graduation.</p>
+    </a>
+
+    <a href="{{ url_for('resources') }}" class="help-card"
+       style="--card-accent:#10b981; --card-glow:rgba(16,185,129,0.05);">
+      <div class="card-icon">🏥</div>
+      <h3>Health & Insurance</h3>
+      <p>Health insurance requirements, accessing medical services,
+         and emergency support.</p>
+    </a>
+
+  </div>
+</div>
+
+{% endblock %}
