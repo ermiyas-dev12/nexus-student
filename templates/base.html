@@ -43,9 +43,45 @@
         Emergency
       </a>
     </li>
-    <li>
-      <a class="nav-cta" href="#">Sign Up</a>
-    </li>
+
+    {% if current_user.is_authenticated %}
+      {% if current_user.is_admin %}
+      <li>
+        <a href="{{ url_for('admin_dashboard') }}"
+           class="{{ 'active' if request.endpoint == 'admin_dashboard' }}"
+           style="color: #7b2ff7;">
+          👑 Admin
+        </a>
+      </li>
+      {% endif %}
+      <li>
+        <a href="{{ url_for('profile') }}"
+           style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+          <img src="/static/uploads/{{ current_user.avatar }}"
+            onerror="this.src='/static/uploads/default.png'"
+            style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid #00d4ff;">
+          <span style="color: #fff;">{{ current_user.username }}</span>
+        </a>
+      </li>
+      <li>
+        <a class="nav-cta" href="{{ url_for('logout') }}"
+           style="border: 1px solid #ff4444; color: #ff4444; background: transparent;">
+          Logout
+        </a>
+      </li>
+    {% else %}
+      <li>
+        <a href="{{ url_for('login') }}"
+           class="{{ 'active' if request.endpoint == 'login' }}"
+           style="color: #00d4ff;">
+          Login
+        </a>
+      </li>
+      <li>
+        <a class="nav-cta" href="{{ url_for('register') }}">Sign Up</a>
+      </li>
+    {% endif %}
+
   </ul>
 </nav>
 
@@ -58,4 +94,3 @@
 
 </body>
 </html>
-

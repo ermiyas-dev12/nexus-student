@@ -1,0 +1,68 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["hello", "hi", "hey", "good morning", "good evening"],
+      "responses": [
+        "Hi! I'm NexusBot, your international student assistant. How can I help?",
+        "Hello! Ask me anything about visa, housing, work, or healthcare in Russia."
+      ]
+    },
+    {
+      "tag": "visa_documents",
+      "patterns": ["what documents do i need", "visa documents", "migration card", "invitation letter"],
+      "responses": [
+        "You need passport, migration card, registration, and invitation letter.",
+        "For visa extension contact your university international office."
+      ]
+    },
+    {
+      "tag": "visa_extension",
+      "patterns": ["extend visa", "visa extension", "renew visa", "visa expired"],
+      "responses": [
+        "Contact your university international office for visa extension support.",
+        "Visa extension requires your passport, migration card and university documents."
+      ]
+    },
+    {
+      "tag": "work_permit",
+      "patterns": ["work permit", "need work permit", "get work permit", "apply work permit"],
+      "responses": [
+        "You need a valid work permit to work legally in Russia.",
+        "Apply for a work permit at the local migration office with your university documents."
+      ]
+    },
+    {
+      "tag": "work_hours",
+      "patterns": ["how many hours can i work", "working hours", "part time work student"],
+      "responses": [
+        "International students can work up to 20 hours per week during term time.",
+        "During holidays you can work full time as an international student."
+      ]
+    },
+    {
+      "tag": "health_emergency",
+      "patterns": ["emergency number", "ambulance", "urgent help", "emergency"],
+      "responses": [
+        "Emergency number in Russia is 103 for ambulance, 112 for all emergencies.",
+        "Call 112 immediately in any emergency situation."
+      ]
+    },
+    {
+      "tag": "health_insurance",
+      "patterns": ["health insurance", "medical insurance", "insurance policy"],
+      "responses": [
+        "Health insurance is mandatory for international students in Russia.",
+        "Your university usually provides basic health insurance. Check with your international office."
+      ]
+    },
+    {
+      "tag": "hospital",
+      "patterns": ["find hospital", "nearest hospital", "go to hospital", "see doctor"],
+      "responses": [
+        "Visit your university clinic first. For emergencies call 103.",
+        "Ask your university international office for the nearest recommended hospital."
+      ]
+    }
+  ]
+}

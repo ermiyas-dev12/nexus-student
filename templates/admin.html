@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard — NexusStudent{% endblock %}
+
+{% block content %}
+<div style="min-height: 100vh; padding: 3rem 1rem;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+
+    <h2 style="color: #00d4ff; margin-bottom: 0.5rem;">👑 Admin Dashboard</h2>
+    <p style="color: #888; margin-bottom: 2rem;">Manage users and posts</p>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div style="padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;
+          background: {% if category == 'error' %}#ff444422{% elif category == 'success' %}#00ff8822{% else %}#ffaa0022{% endif %};
+          color: {% if category == 'error' %}#ff4444{% elif category == 'success' %}#00ff88{% else %}#ffaa00{% endif %};
+          border: 1px solid {% if category == 'error' %}#ff444444{% elif category == 'success' %}#00ff8844{% else %}#ffaa0044{% endif %};">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endwith %}
+
+    <!-- STATS -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+      <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 1.5rem; text-align: center;">
+        <h3 style="color: #00d4ff; font-size: 2rem; margin: 0;">{{ total_users }}</h3>
+        <p style="color: #888; margin: 0.3rem 0 0;">Total Users</p>
+      </div>
+      <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 1.5rem; text-align: center;">
+        <h3 style="color: #00ff88; font-size: 2rem; margin: 0;">{{ verified_users }}</h3>
+        <p style="color: #888; margin: 0.3rem 0 0;">Verified Users</p>
+      </div>
+      <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 1.5rem; text-align: center;">
+        <h3 style="color: #7b2ff7; font-size: 2rem; margin: 0;">{{ total_posts }}</h3>
+        <p style="color: #888; margin: 0.3rem 0 0;">Total Posts</p>
+      </div>
+    </div>
+
+    <!-- USERS TABLE -->
+    <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;">
+      <h3 style="color: #fff; margin-bottom: 1rem;">Users</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 1px solid #2a2a4a;">
+              <th style="color: #888; padding: 0.75rem; text-align: left;">#</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Username</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Email</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Verified</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Admin</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Joined</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr style="border-bottom: 1px solid #1a1a2e;">
+              <td style="color: #888; padding: 0.75rem;">{{ user.id }}</td>
+              <td style="color: #fff; padding: 0.75rem;">{{ user.username }}</td>
+              <td style="color: #888; padding: 0.75rem;">{{ user.email }}</td>
+              <td style="padding: 0.75rem;">
+                <span style="color: {% if user.is_verified %}#00ff88{% else %}#ff4444{% endif %};">
+                  {% if user.is_verified %}✓{% else %}✗{% endif %}
+                </span>
+              </td>
+              <td style="padding: 0.75rem;">
+                <span style="color: {% if user.is_admin %}#7b2ff7{% else %}#888{% endif %};">
+                  {% if user.is_admin %}👑{% else %}—{% endif %}
+                </span>
+              </td>
+              <td style="color: #888; padding: 0.75rem;">{{ user.created_at.strftime('%b %d, %Y') }}</td>
+              <td style="padding: 0.75rem; display: flex; gap: 0.5rem;">
+                <form method="POST" action="/admin/toggle-admin/{{ user.id }}">
+                  <button type="submit"
+                    style="padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid #7b2ff7;
+                    background: transparent; color: #7b2ff7; cursor: pointer; font-size: 0.8rem;">
+                    Toggle Admin
+                  </button>
+                </form>
+                {% if not user.is_admin %}
+                <form method="POST" action="/admin/delete-user/{{ user.id }}"
+                  onsubmit="return confirm('Delete this user?')">
+                  <button type="submit"
+                    style="padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid #ff4444;
+                    background: transparent; color: #ff4444; cursor: pointer; font-size: 0.8rem;">
+                    Delete
+                  </button>
+                </form>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- POSTS TABLE -->
+    <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 16px; padding: 1.5rem;">
+      <h3 style="color: #fff; margin-bottom: 1rem;">Posts</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 1px solid #2a2a4a;">
+              <th style="color: #888; padding: 0.75rem; text-align: left;">#</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Title</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Author</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Date</th>
+              <th style="color: #888; padding: 0.75rem; text-align: left;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for post in posts %}
+            <tr style="border-bottom: 1px solid #1a1a2e;">
+              <td style="color: #888; padding: 0.75rem;">{{ post.id }}</td>
+              <td style="color: #fff; padding: 0.75rem;">{{ post.title }}</td>
+              <td style="color: #888; padding: 0.75rem;">{{ post.author }}</td>
+              <td style="color: #888; padding: 0.75rem;">{{ post.created_at.strftime('%b %d, %Y') }}</td>
+              <td style="padding: 0.75rem;">
+                <form method="POST" action="/admin/delete-post/{{ post.id }}"
+                  onsubmit="return confirm('Delete this post?')">
+                  <button type="submit"
+                    style="padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid #ff4444;
+                    background: transparent; color: #ff4444; cursor: pointer; font-size: 0.8rem;">
+                    Delete
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

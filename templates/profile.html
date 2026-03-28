@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Profile — NexusStudent{% endblock %}
+
+{% block content %}
+<div style="min-height: 100vh; padding: 3rem 1rem;">
+  <div style="max-width: 700px; margin: 0 auto;">
+
+    <h2 style="color: #00d4ff; margin-bottom: 2rem;">My Profile</h2>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div style="padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;
+          background: {% if category == 'error' %}#ff444422{% elif category == 'success' %}#00ff8822{% else %}#ffaa0022{% endif %};
+          color: {% if category == 'error' %}#ff4444{% elif category == 'success' %}#00ff88{% else %}#ffaa00{% endif %};
+          border: 1px solid {% if category == 'error' %}#ff444444{% elif category == 'success' %}#00ff8844{% else %}#ffaa0044{% endif %};">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endwith %}
+
+    <!-- AVATAR + INFO -->
+    <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 2rem;">
+      <img src="/static/uploads/{{ current_user.avatar }}"
+        onerror="this.src='/static/uploads/default.png'"
+        style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #00d4ff;">
+      <div>
+        <h3 style="color: #fff; margin: 0 0 0.3rem;">{{ current_user.username }}</h3>
+        <p style="color: #888; margin: 0 0 0.3rem;">{{ current_user.email }}</p>
+        <p style="color: #888; margin: 0 0 0.3rem;">
+          Joined: {{ current_user.created_at.strftime('%B %d, %Y') }}
+        </p>
+        <span style="padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.8rem;
+          background: {% if current_user.is_verified %}#00ff8822{% else %}#ff444422{% endif %};
+          color: {% if current_user.is_verified %}#00ff88{% else %}#ff4444{% endif %};">
+          {% if current_user.is_verified %}✓ Verified{% else %}✗ Not Verified{% endif %}
+        </span>
+        {% if current_user.is_admin %}
+          <span style="padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.8rem;
+            background: #7b2ff722; color: #7b2ff7; margin-left: 0.5rem;">
+            👑 Admin
+          </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- UPLOAD AVATAR -->
+    <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem;">
+      <h3 style="color: #fff; margin-bottom: 1rem;">Update Avatar</h3>
+      <form method="POST" action="/profile/avatar" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*"
+          style="color: #ccc; margin-bottom: 1rem; display: block;">
+        <button type="submit"
+          style="padding: 0.6rem 1.5rem; border-radius: 8px; border: none;
+          background: linear-gradient(135deg, #00d4ff, #7b2ff7); color: #fff;
+          font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+          Upload Avatar
+        </button>
+      </form>
+    </div>
+
+    <!-- EDIT USERNAME -->
+    <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem;">
+      <h3 style="color: #fff; margin-bottom: 1rem;">Edit Profile</h3>
+      <form method="POST" action="/profile/edit">
+        <div style="margin-bottom: 1rem;">
+          <label style="color: #ccc; display: block; margin-bottom: 0.4rem;">Username</label>
+          <input type="text" name="username" value="{{ current_user.username }}"
+            style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #2a2a4a;
+            background: #0f0f1a; color: #fff; font-size: 0.95rem; box-sizing: border-box;">
+        </div>
+        <button type="submit"
+          style="padding: 0.6rem 1.5rem; border-radius: 8px; border: none;
+          background: linear-gradient(135deg, #00d4ff, #7b2ff7); color: #fff;
+          font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+          Save Changes
+        </button>
+      </form>
+    </div>
+
+    <!-- CHANGE PASSWORD -->
+    <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem;">
+      <h3 style="color: #fff; margin-bottom: 1rem;">Change Password</h3>
+      <form method="POST" action="/profile/change-password">
+        <div style="margin-bottom: 1rem;">
+          <label style="color: #ccc; display: block; margin-bottom: 0.4rem;">Current Password</label>
+          <input type="password" name="old_password" required
+            style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #2a2a4a;
+            background: #0f0f1a; color: #fff; font-size: 0.95rem; box-sizing: border-box;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label style="color: #ccc; display: block; margin-bottom: 0.4rem;">New Password</label>
+          <input type="password" name="new_password" required
+            style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #2a2a4a;
+            background: #0f0f1a; color: #fff; font-size: 0.95rem; box-sizing: border-box;">
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+          <label style="color: #ccc; display: block; margin-bottom: 0.4rem;">Confirm New Password</label>
+          <input type="password" name="confirm_password" required
+            style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #2a2a4a;
+            background: #0f0f1a; color: #fff; font-size: 0.95rem; box-sizing: border-box;">
+        </div>
+        <button type="submit"
+          style="padding: 0.6rem 1.5rem; border-radius: 8px; border: none;
+          background: #ff444488; color: #fff;
+          font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+          Change Password
+        </button>
+      </form>
+    </div>
+
+    <!-- LOGOUT -->
+    <div style="text-align: center; margin-top: 1rem;">
+      <a href="/logout"
+        style="padding: 0.6rem 2rem; border-radius: 8px; border: 1px solid #ff4444;
+        color: #ff4444; text-decoration: none; font-size: 0.9rem;">
+        Logout
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Login — NexusStudent{% endblock %}
+
+{% block content %}
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem;">
+  <div style="background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 420px;">
+
+    <h2 style="color: #00d4ff; text-align: center; margin-bottom: 0.5rem;">Welcome Back</h2>
+    <p style="color: #888; text-align: center; margin-bottom: 2rem;">Log in to NexusStudent</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div style="padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;
+          background: {% if category == 'error' %}#ff444422{% elif category == 'success' %}#00ff8822{% else %}#ffaa0022{% endif %};
+          color: {% if category == 'error' %}#ff4444{% elif category == 'success' %}#00ff88{% else %}#ffaa00{% endif %};
+          border: 1px solid {% if category == 'error' %}#ff444444{% elif category == 'success' %}#00ff8844{% else %}#ffaa0044{% endif %};">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="/login">
+      <div style="margin-bottom: 1.2rem;">
+        <label style="color: #ccc; display: block; margin-bottom: 0.4rem;">Email</label>
+        <input type="email" name="email" required placeholder="your@email.com"
+          style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #2a2a4a;
+          background: #0f0f1a; color: #fff; font-size: 0.95rem; box-sizing: border-box;">
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label style="color: #ccc; display: block; margin-bottom: 0.4rem;">Password</label>
+        <input type="password" name="password" required placeholder="Your password"
+          style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #2a2a4a;
+          background: #0f0f1a; color: #fff; font-size: 0.95rem; box-sizing: border-box;">
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <label style="color: #888; display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+          <input type="checkbox" name="remember_me"> Remember me
+        </label>
+        <a href="/forgot-password" style="color: #00d4ff; text-decoration: none; font-size: 0.9rem;">Forgot password?</a>
+      </div>
+
+      <button type="submit"
+        style="width: 100%; padding: 0.85rem; border-radius: 8px; border: none;
+        background: linear-gradient(135deg, #00d4ff, #7b2ff7); color: #fff;
+        font-size: 1rem; font-weight: 600; cursor: pointer;">
+        Log In
+      </button>
+    </form>
+
+    <p style="text-align: center; color: #888; margin-top: 1.5rem;">
+      Don't have an account?
+      <a href="/register" style="color: #00d4ff; text-decoration: none;">Sign up</a>
+    </p>
+
+  </div>
+</div>
+{% endblock %}
