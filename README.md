@@ -169,4 +169,3 @@ This project was developed as part of a Flask-based assignment to demonstrate:
 * Practical problem-solving for real-world users
 
 ---
-

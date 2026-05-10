@@ -1,13 +1,11 @@
 from flask_mail import Message
 
+
 def send_verification_email(mail, user, s):
-    token = s.dumps(user.email, salt='email-verify')
+    token = s.dumps(user.email, salt="email-verify")
     link = f"http://127.0.0.1:5000/verify/{token}"
 
-    msg = Message(
-        subject='Verify your NexusStudent email',
-        recipients=[user.email]
-    )
+    msg = Message(subject="Verify your NexusStudent email", recipients=[user.email])
     msg.body = f"""
 Hi {user.username},
 
@@ -23,13 +21,10 @@ This link expires in 1 hour.
 
 
 def send_reset_email(mail, user, s):
-    token = s.dumps(user.email, salt='password-reset')
+    token = s.dumps(user.email, salt="password-reset")
     link = f"http://127.0.0.1:5000/reset-password/{token}"
 
-    msg = Message(
-        subject='Reset your NexusStudent password',
-        recipients=[user.email]
-    )
+    msg = Message(subject="Reset your NexusStudent password", recipients=[user.email])
     msg.body = f"""
 Hi {user.username},
 

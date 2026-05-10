@@ -12,6 +12,7 @@ INTENTS_PATH = os.path.join(BASE_DIR, "intents.json")
 with open(INTENTS_PATH, "r", encoding="utf-8") as file:
     intents_data = json.load(file)
 
+
 def match_intent(msg: str):
     msg = msg.lower()
     for intent in intents_data["intents"]:
@@ -19,6 +20,7 @@ def match_intent(msg: str):
             if pattern.lower() in msg:
                 return random.choice(intent["responses"])
     return None
+
 
 def get_ai_response(msg: str):
     api_key = os.getenv("YANDEX_API_KEY")
@@ -30,17 +32,10 @@ def get_ai_response(msg: str):
     try:
         response = requests.post(
             "https://llm.api.cloud.yandex.net/foundationModels/v1/completion",
-            headers={
-                "Authorization": f"Api-Key {api_key}",
-                "Content-Type": "application/json"
-            },
+            headers={"Authorization": f"Api-Key {api_key}", "Content-Type": "application/json"},
             json={
                 "modelUri": f"gpt://{folder_id}/yandexgpt-lite",
-                "completionOptions": {
-                    "stream": False,
-                    "temperature": 0.7,
-                    "maxTokens": 500
-                },
+                "completionOptions": {"stream": False, "temperature": 0.7, "maxTokens": 500},
                 "messages": [
                     {
                         "role": "system",
@@ -59,16 +54,12 @@ def get_ai_response(msg: str):
                             "- Professional and clear\n"
                             "- Helpful but not overly casual\n"
                             "- Focused on solving the user's problem quickly"
-                        )
+                        ),
                     },
-                    {
-                        "role": "user",
-                        "text": msg
-                    }
-                ]
-            }
+                    {"role": "user", "text": msg},
+                ],
+            },
         )
-
 
         data = response.json()
         return data["result"]["alternatives"][0]["message"]["text"]
@@ -76,6 +67,7 @@ def get_ai_response(msg: str):
     except Exception as e:
         print("[Yandex Error]", e)
         return "Temporary AI issue. Please check official university or migration services."
+
 
 def get_response(msg: str):
     rule_based = match_intent(msg)
