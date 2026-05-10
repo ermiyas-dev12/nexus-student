@@ -9,6 +9,35 @@
     Ask questions, share experiences, help each other
   </div>
 
+  <!-- SEARCH BAR -->
+  <div style="margin-bottom: 2rem;">
+    <form method="GET" action="/community" style="display: flex; gap: 0.75rem;">
+      <input type="text" name="q" value="{{ query }}"
+        placeholder="Search posts..."
+        style="flex: 1; padding: 0.75rem 1rem; border-radius: 8px;
+        border: 1px solid #2a2a4a; background: #0f0f1a;
+        color: #fff; font-size: 0.95rem;">
+      <button type="submit"
+        style="padding: 0.75rem 1.5rem; border-radius: 8px; border: none;
+        background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+        color: #fff; font-weight: 600; cursor: pointer;">
+        Search
+      </button>
+      {% if query %}
+      <a href="/community"
+        style="padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #2a2a4a;
+        color: #888; text-decoration: none; display: flex; align-items: center;">
+        Clear
+      </a>
+      {% endif %}
+    </form>
+    {% if query %}
+      <p style="color: #888; margin-top: 0.5rem; font-size: 0.9rem;">
+        {{ posts|length }} result(s) for "<span style="color: #00d4ff;">{{ query }}</span>"
+      </p>
+    {% endif %}
+  </div>
+
   <!-- POST FORM -->
   <div class="post-form">
     <h3>✍️ Post a Question</h3>
@@ -29,48 +58,60 @@
   <div id="communityFeed">
     {% if posts %}
       {% for post in posts %}
-      <div class="community-post">
+      <div class="community-post" id="post-{{ post.id }}">
         <div class="post-header">
           <div class="post-avatar" style="background:rgba(0,212,255,0.15); color:#00d4ff;">
-            {{ post[3][0] | upper if post[3] else 'A' }}
+            {{ post.author[0] | upper if post.author else 'A' }}
           </div>
           <div class="post-meta">
-            <strong>{{ post[3] or 'Anonymous' }}</strong>
-            <span>{{ post[4] }}</span>
+            <strong>{{ post.author or 'Anonymous' }}</strong>
+            <span>{{ post.created_at.strftime('%b %d, %Y') }}</span>
           </div>
           <span class="post-category tag-visa">Question</span>
         </div>
-        <div class="post-title">{{ post[1] }}</div>
-        {% if post[2] %}
-          <div class="post-body">{{ post[2] }}</div>
+        <div class="post-title">{{ post.title }}</div>
+        {% if post.body %}
+          <div class="post-body">{{ post.body }}</div>
         {% endif %}
         <div class="post-actions">
-          <button class="post-action-btn">👍 0</button>
+          <button class="post-action-btn like-btn"
+            id="like-btn-{{ post.id }}"
+            onclick="likePost({{ post.id }})"
+            style="{% if post.id in liked_post_ids %}color: #00d4ff;{% endif %}">
+            👍 <span id="like-count-{{ post.id }}">{{ post.likes|length }}</span>
+          </button>
           <button class="post-action-btn">💬 0 Replies</button>
           <button class="post-action-btn">🔖 Save</button>
         </div>
       </div>
       {% endfor %}
     {% else %}
-      <!-- Sample posts when database is empty -->
-      <div class="community-post">
-        <div class="post-header">
-          <div class="post-avatar" style="background:rgba(0,212,255,0.15); color:#00d4ff;">Y</div>
-          <div class="post-meta">
-            <strong>Yuki S.</strong>
-            <span>2 hours ago · Moscow, Russia 🇷🇺</span>
+      {% if query %}
+        <div style="text-align: center; color: #888; padding: 3rem;">
+          <p style="font-size: 1.2rem;">No posts found for "{{ query }}"</p>
+          <a href="/community" style="color: #00d4ff;">Clear search</a>
+        </div>
+      {% else %}
+        <!-- Sample post when database is empty -->
+        <div class="community-post">
+          <div class="post-header">
+            <div class="post-avatar" style="background:rgba(0,212,255,0.15); color:#00d4ff;">Y</div>
+            <div class="post-meta">
+              <strong>Yuki S.</strong>
+              <span>2 hours ago · Moscow, Russia 🇷🇺</span>
+            </div>
+            <span class="post-category tag-visa">Visa</span>
           </div>
-          <span class="post-category tag-visa">Visa</span>
+          <div class="post-title">Can I travel home during Christmas break?</div>
+          <div class="post-body">I'm on a student visa and want to visit
+            family. Do I need special documents to come back?</div>
+          <div class="post-actions">
+            <button class="post-action-btn">👍 11</button>
+            <button class="post-action-btn">💬 3 Replies</button>
+            <button class="post-action-btn">🔖 Save</button>
+          </div>
         </div>
-        <div class="post-title">Can I travel home during Christmas break?</div>
-        <div class="post-body">I'm on a student visa and want to visit
-          family. Do I need special documents to come back?</div>
-        <div class="post-actions">
-          <button class="post-action-btn">👍 11</button>
-          <button class="post-action-btn">💬 3 Replies</button>
-          <button class="post-action-btn">🔖 Save</button>
-        </div>
-      </div>
+      {% endif %}
     {% endif %}
   </div>
 
@@ -79,6 +120,7 @@
 
 {% block extra_js %}
 <script>
+  // ---------- SUBMIT POST ----------
   function submitPost() {
     const title = document.getElementById('postTitle').value.trim();
     const body = document.getElementById('postBody').value.trim();
@@ -99,10 +141,30 @@
     .then(res => res.json())
     .then(data => {
       msg.style.color = 'var(--success)';
-      msg.textContent = '✅ Posted! Refresh to see it.';
+      msg.textContent = '✅ Posted! Refreshing...';
       document.getElementById('postTitle').value = '';
       document.getElementById('postBody').value = '';
       document.getElementById('postAuthor').value = '';
+      setTimeout(() => location.reload(), 1000);
+    });
+  }
+
+  // ---------- LIKE POST ----------
+  function likePost(postId) {
+    fetch(`/api/post/${postId}/like`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
+      const btn = document.getElementById(`like-btn-${postId}`);
+      const count = document.getElementById(`like-count-${postId}`);
+      count.textContent = data.count;
+      btn.style.color = data.liked ? '#00d4ff' : '';
     });
   }
 </script>

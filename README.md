@@ -66,25 +66,54 @@ The application follows a simple client-server architecture:
 ## Project Structure
 
 ```
-student_support/
+Nexus_student/
 │
-├── app.py                # Main Flask application
-├── requirements.txt      # Project dependencies
-├── README.md             # Project documentation
+├── .env
+├── .gitignore
+├── run.py
+├── config.py
+├── requirements.txt
+├── README.md
 │
-├── templates/            # HTML templates
+├── database/
+│   ├── __init__.py
+│   ├── models.py
+│   └── users.db
+│
+├── routes/
+│   ├── __init__.py
+│   ├── main_routes.py
+│   ├── api_routes.py
+│   ├── auth_routes.py
+│   ├── profile_routes.py
+│   └── admin_routes.py
+│
+├── services/
+│   ├── __init__.py
+│   ├── chatbot_service.py
+│   ├── email_service.py
+│   └── intents.json
+│
+├── templates/
 │   ├── base.html
 │   ├── index.html
 │   ├── chatbot.html
 │   ├── resources.html
 │   ├── community.html
-│   └── emergency.html
+│   ├── emergency.html
+│   ├── profile.html
+│   ├── admin.html
+│   └── auth/
+│       ├── login.html
+│       ├── register.html
+│       ├── forgot.html
+│       └── reset.html
 │
-├── static/               # Frontend assets
-│   ├── style.css
-│   └── main.js
-│
-└── database/             # SQLite database files
+└── static/
+    ├── style.css
+    ├── main.js
+    └── uploads/
+        └── default.png
 ```
 
 ---

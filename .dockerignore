@@ -5,3 +5,6 @@ __pycache__/
 .env
 database/users.db
 database/nexus_student.db
+.gitignore
+README.md
+docker-compose.override.yml

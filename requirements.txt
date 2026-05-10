@@ -1,1 +1,13 @@
 flask==3.0.0
+flask-sqlalchemy
+flask-login
+flask-mail
+pymysql
+cryptography
+python-dotenv
+Pillow
+requests
+pytest
+pytest-flask
+flake8
+ruff

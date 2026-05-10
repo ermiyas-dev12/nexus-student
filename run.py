@@ -11,7 +11,7 @@ import config
 
 app = Flask(__name__)
 
-# ---------- CONFIG ----------
+# CONFIG
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = config.SECRET_KEY
@@ -24,10 +24,10 @@ app.config['MAIL_DEFAULT_SENDER'] = config.MAIL_DEFAULT_SENDER
 app.config['UPLOAD_FOLDER'] = config.UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = config.MAX_CONTENT_LENGTH
 
-# ---------- INIT DB ----------
+# INIT DB
 db.init_app(app)
 
-# ---------- FLASK LOGIN ----------
+#  FLASK LOGIN
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -39,10 +39,10 @@ from database.models import User
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# ---------- MAIL ----------
+#  MAIL
 mail = Mail(app)
 
-# ---------- REGISTER ROUTES ----------
+#  REGISTER ROUTES
 register_main_routes(app)
 register_api_routes(app)
 register_auth_routes(app, mail)
@@ -52,4 +52,4 @@ register_admin_routes(app)
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

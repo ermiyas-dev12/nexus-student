@@ -4,8 +4,7 @@
       "tag": "greeting",
       "patterns": ["hello", "hi", "hey", "good morning", "good evening"],
       "responses": [
-        "Hi! I'm NexusBot, your international student assistant. How can I help?",
-        "Hello! Ask me anything about visa, housing, work, or healthcare in Russia."
+        "Hello!  How can I help?"
       ]
     },
     {
