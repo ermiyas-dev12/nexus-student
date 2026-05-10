@@ -1,5 +1,5 @@
 from flask import Flask
-from database.models import db
+from database.models import db, User
 from routes.main_routes import register_main_routes
 from routes.api_routes import register_api_routes
 from routes.auth_routes import register_auth_routes
@@ -33,7 +33,6 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'Please log in to access this page.'
 
-from database.models import User
 
 @login_manager.user_loader
 def load_user(user_id):

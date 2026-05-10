@@ -76,7 +76,7 @@ def register_api_routes(app):
         if not current_user.is_authenticated:
             return jsonify({'error': 'Login required to like posts'}), 401
 
-        post = Post.query.get_or_404(post_id)
+        #post = Post.query.get_or_404(post_id)
         existing_like = Like.query.filter_by(
             user_id=current_user.id,
             post_id=post_id
